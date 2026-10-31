@@ -1,15 +1,13 @@
 # выход из лабиринта
 
-import sys
-from typing import List, Tuple
 
-def read_input() -> Tuple[List[str], Tuple[int, int], Tuple[int, int]]:
+def read_input() -> tuple[list[str], tuple[int, int], tuple[int, int]]:
     with open('input.txt') as in_file:
         line_1 = in_file.readline().split(sep=' ')
         (n, m) = (int(line_1[0]), int(line_1[1]))
-        maze:List[str] = ["" for _ in range(n)]
-        start: Tuple[int, int] = (0, 0)
-        end: Tuple[int, int] = (0, 0)
+        maze:list[str] = ["" for _ in range(n)]
+        start: tuple[int, int] = (0, 0)
+        end: tuple[int, int] = (0, 0)
             
         for x in range(n):
             row = in_file.readline()
@@ -25,7 +23,7 @@ def read_input() -> Tuple[List[str], Tuple[int, int], Tuple[int, int]]:
 def get_linear_place(row: int, col: int, length:int):
     return row * length + col
 
-def analyze(maze: List[str], start:Tuple[int, int], end:Tuple[int, int]) -> Tuple[int, List[str]]:
+def analyze(maze: list[str], start:tuple[int, int], end:tuple[int, int]) -> tuple[int, list[str]]:
     parents = [(0, "") for x in range(len(maze) * len(maze[0]))]
     row_length = len(maze[0])
     start_inline = get_linear_place(start[0], start[1], row_length)
@@ -43,21 +41,22 @@ def analyze(maze: List[str], start:Tuple[int, int], end:Tuple[int, int]) -> Tupl
                     (cell[0] + 1, cell[1], "D"),
                     (cell[0], cell[1] + 1, "R")]
         for neighbor in neighbors:
-            if (neighbor[0], neighbor[1]) not in visited_cells:
-                if (0 <= neighbor[0] < len(maze)) and (0 <= neighbor[1] < len(maze[0])):
-                    match maze[neighbor[0]][neighbor[1]]:
-                        case "#":
-                            continue
-                        case "F":
-                            
-                            parents[get_linear_place(neighbor[0], neighbor[1], row_length)] = (
+            if ((neighbor[0], neighbor[1]) not in visited_cells 
+                and 0 <= neighbor[0] < len(maze) 
+                and 0 <= neighbor[1] < len(maze[0])):
+                match maze[neighbor[0]][neighbor[1]]:
+                    case "#":
+                        continue
+                    case "F":
+                        
+                        parents[get_linear_place(neighbor[0], neighbor[1], row_length)] = (
+                            get_linear_place(cell[0], cell[1], row_length), neighbor[2])
+                        is_finding = False
+                        break
+                    case ".":
+                        cells_queue.append((neighbor[0], neighbor[1]))
+                        parents[get_linear_place(neighbor[0], neighbor[1], row_length)] = (
                                 get_linear_place(cell[0], cell[1], row_length), neighbor[2])
-                            is_finding = False
-                            break
-                        case ".":
-                            cells_queue.append((neighbor[0], neighbor[1]))
-                            parents[get_linear_place(neighbor[0], neighbor[1], row_length)] = (
-                                 get_linear_place(cell[0], cell[1], row_length), neighbor[2])
                             
     
     counter = 0
@@ -80,7 +79,7 @@ def analyze(maze: List[str], start:Tuple[int, int], end:Tuple[int, int]) -> Tupl
     return counter, path
 
 
-def write_solution(path_len:int, steps:List[str]):
+def write_solution(path_len:int, steps:list[str]):
     with open('output.txt', 'w') as out_file:
         if path_len == -1:
             out_file.write(str(-1))
