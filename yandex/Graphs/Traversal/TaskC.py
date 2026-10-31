@@ -1,5 +1,7 @@
 # выход из лабиринта
 
+from collections import deque
+
 
 def read_input() -> tuple[list[str], tuple[int, int], tuple[int, int]]:
     with open('input.txt') as in_file:
@@ -29,13 +31,14 @@ def analyze(maze: list[str], start:tuple[int, int], end:tuple[int, int]) -> tupl
     start_inline = get_linear_place(start[0], start[1], row_length)
     end_inline = get_linear_place(end[0], end[1], row_length)
     parents[start_inline] = (0, "S")
-    visited_cells = []
-    cells_queue = [start]
+    visited_cells: set = set()
+    cells_queue: deque = deque()
+    cells_queue.append(start)
     is_finding = True
     
     while len(cells_queue) > 0 and is_finding:
-        cell = cells_queue.pop(0)
-        visited_cells.append(cell)
+        cell = cells_queue.pop()
+        visited_cells.add(cell)
         neighbors =[(cell[0] - 1, cell[1], "U"),
                     (cell[0], cell[1] - 1, "L"),
                     (cell[0] + 1, cell[1], "D"),
