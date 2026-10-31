@@ -47,8 +47,7 @@ def analyze(maze: list[str], start:tuple[int, int], end:tuple[int, int]) -> tupl
                 match maze[neighbor[0]][neighbor[1]]:
                     case "#":
                         continue
-                    case "F":
-                        
+                    case "F":                        
                         parents[get_linear_place(neighbor[0], neighbor[1], row_length)] = (
                             get_linear_place(cell[0], cell[1], row_length), neighbor[2])
                         is_finding = False
