@@ -32,13 +32,13 @@ def analyze(maze: list[str], start:tuple[int, int], end:tuple[int, int]) -> tupl
     end_inline = get_linear_place(end[0], end[1], row_length)
     parents[start_inline] = (0, "S")
     visited_cells: set = set()
+    visited_cells.add(start)
     cells_queue: deque = deque()
     cells_queue.append(start)
     is_finding = True
     
     while len(cells_queue) > 0 and is_finding:
         cell = cells_queue.popleft()
-        visited_cells.add(cell)
         neighbors =[(cell[0] - 1, cell[1], "U"),
                     (cell[0], cell[1] - 1, "L"),
                     (cell[0] + 1, cell[1], "D"),
@@ -57,6 +57,7 @@ def analyze(maze: list[str], start:tuple[int, int], end:tuple[int, int]) -> tupl
                         break
                     case ".":
                         cells_queue.append((neighbor[0], neighbor[1]))
+                        visited_cells.add((neighbor[0], neighbor[1]))
                         parents[get_linear_place(neighbor[0], neighbor[1], row_length)] = (
                                 get_linear_place(cell[0], cell[1], row_length), neighbor[2])
                             
@@ -66,7 +67,7 @@ def analyze(maze: list[str], start:tuple[int, int], end:tuple[int, int]) -> tupl
     finding = True
     last = parents[end_inline]
     
-    if parents[end_inline][1] not in ['L', 'R', 'D', 'U']:
+    if parents[end_inline][1] not in {'L', 'R', 'D', 'U'}:
         return -1, []
     
     while finding:
