@@ -37,7 +37,7 @@ def analyze(maze: list[str], start:tuple[int, int], end:tuple[int, int]) -> tupl
     is_finding = True
     
     while len(cells_queue) > 0 and is_finding:
-        cell = cells_queue.pop()
+        cell = cells_queue.popleft()
         visited_cells.add(cell)
         neighbors =[(cell[0] - 1, cell[1], "U"),
                     (cell[0], cell[1] - 1, "L"),
